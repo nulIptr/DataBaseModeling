@@ -12,6 +12,7 @@ namespace gm
     {
         static void Main(string[] args)
         {
+         
             var entities = MySqlHelper.GetTableInfo(args[0]);
             var sb = new StringBuilder();
             var tableName = args.Length > 1 ? args[1] : null;
@@ -35,6 +36,7 @@ namespace gm
                     sb.AppendLine($@" /// <summary>
              /// {(prop.Comment == "" ? prop.PropName : prop.Comment)}
              /// </summary>
+             {(prop.Length>0? "[MaxLength(" + prop.Length+ ")]":"")} 
              public {prop.TypeName}{(prop.IsNull ? " ? " : "")} {prop.PropName} {{ get; set; }}");
                 }
 
@@ -71,7 +73,7 @@ namespace gm
                 string propName = rd[1].ToString();
                 string typeName = GetCLRType(rd[2].ToString());
 
-                bool isNull = Convert.ToBoolean(rd[3]);
+                bool isNull =string.Equals(rd[3].ToString(),"YES",StringComparison.OrdinalIgnoreCase)|| string.Equals(rd[3].ToString(), "TRUE", StringComparison.OrdinalIgnoreCase);
                 if (typeName == "string" || typeName == "byte[]")
                 {
                     isNull = false;
