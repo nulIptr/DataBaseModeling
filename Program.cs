@@ -12,7 +12,7 @@ namespace gm
     {
         static void Main(string[] args)
         {
-         
+        
             var entities = MySqlHelper.GetTableInfo(args[0]);
             var sb = new StringBuilder();
             var tableName = args.Length > 1 ? args[1] : null;
@@ -69,7 +69,8 @@ namespace gm
             MySqlDataReader rd = cmd.ExecuteReader();
             while (rd.Read())
             {
-                string className = ToCamel(rd[0].ToString());
+                //string className = ToCamel(rd[0].ToString());
+                string className = rd[0].ToString();
                 string propName = rd[1].ToString();
                 string typeName = GetCLRType(rd[2].ToString());
 
@@ -80,7 +81,13 @@ namespace gm
                 }
 
                 bool isPrimary = Convert.ToBoolean(rd[4]);
-                int propLength = string.IsNullOrEmpty(rd[5].ToString()) ? 0 : Convert.ToInt32(rd[5]);
+                var l = int.TryParse(rd[5].ToString(), out var len);
+                int propLength = 0;
+                if (l)
+                {
+                    propLength = len;
+                }
+
                 string comment = rd[6].ToString();
 
                 var entity = list.Find(item => item.Name == className);
