@@ -72,13 +72,9 @@ namespace gm
                 //string className = ToCamel(rd[0].ToString());
                 string className = rd[0].ToString();
                 string propName = rd[1].ToString();
-                string typeName = GetCLRType(rd[2].ToString());
+                string typeName;
 
-                bool isNull =string.Equals(rd[3].ToString(),"YES",StringComparison.OrdinalIgnoreCase)|| string.Equals(rd[3].ToString(), "TRUE", StringComparison.OrdinalIgnoreCase);
-                if (typeName == "string" || typeName == "byte[]")
-                {
-                    isNull = false;
-                }
+             
 
                 bool isPrimary = Convert.ToBoolean(rd[4]);
                 var l = int.TryParse(rd[5].ToString(), out var len);
@@ -88,6 +84,20 @@ namespace gm
                     propLength = len;
                 }
 
+                var dbType = rd[2].ToString();
+                if (propLength==36&& dbType == "char")
+                {
+                    typeName = "Guid";
+                }
+                else
+                {
+                    typeName = GetCLRType(dbType);
+                }
+                bool isNull = string.Equals(rd[3].ToString(), "YES", StringComparison.OrdinalIgnoreCase) || string.Equals(rd[3].ToString(), "TRUE", StringComparison.OrdinalIgnoreCase);
+                if (typeName == "string" || typeName == "byte[]")
+                {
+                    isNull = false;
+                }
                 string comment = rd[6].ToString();
 
                 var entity = list.Find(item => item.Name == className);
