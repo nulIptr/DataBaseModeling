@@ -36,7 +36,7 @@ namespace gm
                     sb.AppendLine($@" /// <summary>
              /// {(prop.Comment == "" ? prop.PropName : prop.Comment)}
              /// </summary>
-             {(prop.Length>0? "[MaxLength(" + prop.Length+ ")]":"")} 
+             {(prop.Length>0&&prop.TypeName!="Guid" ? "[MaxLength(" + prop.Length+ ")]":"")} 
              public {prop.TypeName}{(prop.IsNull ? " ? " : "")} {prop.PropName} {{ get; set; }}");
                 }
 
